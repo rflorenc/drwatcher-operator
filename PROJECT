@@ -1,0 +1,11 @@
+domain: seven
+layout: go.kubebuilder.io/v2
+projectName: drwatcher
+repo: github.com/rflorenc/drwatcher-operator
+resources:
+- group: dr
+  kind: DRWatcher
+  version: v1
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}

@@ -1,0 +1,8 @@
+apiVersion: dr.seven/v1
+kind: DRWatcher
+metadata:
+  name: drwatcher-sample
+spec:
+  readyForBackup: true
+  schedule: '0 1 * * *'
+  command: busybox
