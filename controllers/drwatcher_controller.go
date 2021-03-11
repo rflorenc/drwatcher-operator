@@ -47,7 +47,6 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		return ctrl.Result{}, err
 	}
 
-	//TODO: "exit early" if no backupVolumesAnnotations exist for restic
 	resticAnnotations, err := r.getPodInfo(ctx, &drwatcherCR, logger)
 	if err != nil {
 		logger.Error(err, "Failed to get restic pod annotations", "Namespace",
@@ -60,7 +59,6 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 
 	if drwatcherCR.Spec.ReadyForBackup {
-		// TODO: set owner reference either manually or using controller util
 		if drwatcherCR.Spec.Schedule != "" {
 			existingSchedules := r.getScheduleNames(ctx, &drwatcherCR, logger)
 			logger.Info(fmt.Sprintf("Current schedules: %s", existingSchedules))
@@ -80,7 +78,6 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 			newBackup := r.newBackupForCR(&drwatcherCR)
 			logger.Info(fmt.Sprintf("Creating backup %s for project: %s", newBackup.Name, drwatcherCR.Namespace))
 
-			// TODO: set owner reference either manually or using controller util
 			err = r.Create(ctx, newBackup)
 			if err != nil {
 				logger.Info(fmt.Sprintf("Failed to create backup %s for project: %s", newBackup.Name, drwatcherCR.Namespace))
