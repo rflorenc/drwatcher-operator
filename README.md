@@ -13,7 +13,7 @@ An example backup infra can be setup by following the instructions here: https:/
     + The DRWatcher CustomResourceDefinition (config/crd/bases) must be applied.
     + A DRWatcher CustomResource (config/samples/) must be installed in the namespace in which we want to self service backup.
 
-2. The DRWatcher yaml specification must exist for each namespace to self service:
+2. The DRWatcher Custom Resource must exist in each namespace to self service:
     + When `readyForBackup: true` and a `schedule` is defined, DRWatcher will create a Scheduled backup for the namespace.
     + When `readyForBackup: true` and a `schedule` is absent, DRWatcher will create an immediate Backup for the namespace.
     + When `readyForBackup: false`, the reconciler only logs the existing Restic annotations (`backup.velero.io/backup-volumes`)
