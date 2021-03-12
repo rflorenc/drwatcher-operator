@@ -2,7 +2,7 @@
 
 ## Summary
 
-The DR (Disaster Restic|Recovery) Watcher is used for enabling Velero based Self Service backups and schedules in OpenShift Container Platform v4x.
+The DR (Disaster Restic|Recovery) Watcher is used for enabling Velero based Self Service backups and schedules in OpenShift v4.x, Kubernetes v1.13 or later.
 An example backup infra can be setup by following the instructions here: https://github.com/rflorenc/openshift-backup-infra 
 
 
