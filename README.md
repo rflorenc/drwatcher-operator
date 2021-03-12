@@ -30,7 +30,7 @@ spec:
 
 ## Requirements
 
-+ Access to OpenShift version 4.5 or later.
++ Access to OpenShift v4.1, Kubernetes v1.13 or later.
 + A working Velero/Konveyor/Restic/Noobaa installation.
 
 ## How to run unit tests
