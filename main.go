@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -13,6 +14,7 @@ import (
 
 	drv1 "github.com/rflorenc/drwatcher-operator/api/v1"
 	"github.com/rflorenc/drwatcher-operator/controllers"
+	drwversion "github.com/rflorenc/drwatcher-operator/version"
 	velerov1 "github.com/vmware-tanzu/velero/pkg/apis/velero/v1"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	// +kubebuilder:scaffold:imports
@@ -37,9 +39,7 @@ var (
 )
 
 func main() {
-
 	var enableLeaderElection bool
-	flag.StringVar(&metricsAddr, "metrics-addr", metricsPort, "The address the metric endpoint binds to.")
 	flag.StringVar(&metricsAddr, "metrics-addr", metricsPort, "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
@@ -81,7 +81,7 @@ func main() {
 	}
 	// +kubebuilder:scaffold:builder
 
-	setupLog.Info("starting manager")
+	setupLog.Info(fmt.Sprintf("Operator Version: %s", drwversion.Version))
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)

@@ -29,9 +29,9 @@ all: manager
 test: generate fmt vet manifests
 	go test ./... -coverprofile cover.out
 
-# Build manager binary
+# Build drwatcher-operator binary
 manager: generate fmt vet
-	go build -o bin/manager main.go
+	go build -v -o build/bin/drwatcher-operator main.go
 
 # Run against the configured Kubernetes cluster in ~/.kube/config
 run: generate fmt vet manifests
