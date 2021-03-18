@@ -46,7 +46,7 @@ See `config/samples` for example CRs to use.
 ## How to build and run locally (off-cluster)
 
 ```shell
-make 
+make
 build/bin/drwatcher-operator
 ```
 
