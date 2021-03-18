@@ -2,7 +2,7 @@
 
 dryrun=""
 helm_chart_name=drwatcher-operator
-namespace=six-project-spaces
+namespace=example
 
 function print_help() {
 cat << EOF
