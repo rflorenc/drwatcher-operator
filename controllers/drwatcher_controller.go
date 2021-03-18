@@ -17,7 +17,6 @@ import (
 
 var (
 	backupVolumesAnnotation  string = "backup.velero.io/backup-volumes"
-	readyForBackupAnnotation bool
 	veleroNamespace          string = "velero"
 )
 
