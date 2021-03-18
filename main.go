@@ -40,7 +40,6 @@ func main() {
 
 	var enableLeaderElection bool
 	flag.StringVar(&metricsAddr, "metrics-addr", metricsPort, "The address the metric endpoint binds to.")
-	flag.StringVar(&metricsAddr, "metrics-addr", metricsPort, "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
