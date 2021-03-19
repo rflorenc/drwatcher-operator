@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "drwatcher.name" . }}-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "drwatcher.name" . }}-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "drwatcher.name" . }}
+    namespace: {{ .Release.Namespace }}

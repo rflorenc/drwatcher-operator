@@ -1,0 +1,40 @@
+# Default values for drwatcher self service operator.
+
+replicaCount: 1
+
+image:
+  repository: quay.io/rflorenc/drwatcher-operator
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v0.1.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "drwatcher-operator"
+
+podAnnotations:
+  prometheus.io/port: "8080"
+  prometheus.io/scrape: "true"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources: {}
+  # If you want to specify resources, uncomment the following lines,
+  # adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi

@@ -1,0 +1,41 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "drwatcher.name" . }}-role
+rules:
+- apiGroups:
+  - dr.seven
+  resources:
+  - drwatchers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - dr.seven
+  resources:
+  - drwatchers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+    - "velero.io"
+  resources:
+    - backups
+    - schedules
+  verbs:
+    - '*'
+- apiGroups:
+    - ""
+  resources:
+    - pods
+    - secrets
+    - serviceaccounts
+  verbs:
+    - '*'
