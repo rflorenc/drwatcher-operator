@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"os"
 	"fmt"
+	"os"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"

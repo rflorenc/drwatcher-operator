@@ -12,12 +12,14 @@ import (
 
 	drv1 "github.com/rflorenc/drwatcher-operator/api/v1"
 	velerov1 "github.com/vmware-tanzu/velero/pkg/apis/velero/v1"
+	veleroInstall "github.com/vmware-tanzu/velero/pkg/install"
 	corev1 "k8s.io/api/core/v1"
+	apiextv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 )
 
 var (
-	backupVolumesAnnotation  string = "backup.velero.io/backup-volumes"
-	veleroNamespace          string = "velero"
+	backupVolumesAnnotation string = "backup.velero.io/backup-volumes"
+	veleroNamespace         string = "velero"
 )
 
 // DRWatcherReconciler reconciles a DRWatcher object
@@ -36,6 +38,11 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	var err error
 	var drwatcherCR drv1.DRWatcher
 
+	err = r.preRequisites()
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
 	// get the DRWatcher CR
 	err = r.Get(ctx, req.NamespacedName, &drwatcherCR)
 	if err != nil {
@@ -51,10 +58,8 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		logger.Error(err, "Failed to get restic pod annotations", "Namespace",
 			veleroNamespace, "DRWatcher.Name", drwatcherCR.Name)
 		return ctrl.Result{}, err
-	}
-
-	if resticAnnotations == nil {
-		fmt.Println("resticAnnotations: ", resticAnnotations)
+	} else {
+		logger.Info(fmt.Sprintf("resticAnnotations: %s", resticAnnotations))
 	}
 
 	if drwatcherCR.Spec.ReadyForBackup {
@@ -88,6 +93,18 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 
 	return ctrl.Result{}, nil
+}
+
+func (r *DRWatcherReconciler) preRequisites() error {
+	for _, unstructuredCrd := range veleroInstall.AllCRDs().Items {
+		crd := &apiextv1beta1.CustomResourceDefinition{}
+		err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredCrd.Object, crd)
+		if err != nil {
+			r.Log.Error(err, "Required velero.io group CRDs not found.")
+			return err
+		}
+	}
+	return nil
 }
 
 // SetupWithManager sets up a new DRWatcher controller managed by mgr
