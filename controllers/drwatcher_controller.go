@@ -7,14 +7,12 @@ import (
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	drv1 "github.com/rflorenc/drwatcher-operator/api/v1"
-	velerov1 "github.com/vmware-tanzu/velero/pkg/apis/velero/v1"
-	veleroInstall "github.com/vmware-tanzu/velero/pkg/install"
 	corev1 "k8s.io/api/core/v1"
-	apiextv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 )
 
 var (
@@ -38,16 +36,10 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	var err error
 	var drwatcherCR drv1.DRWatcher
 
-	err = r.preRequisites()
-	if err != nil {
-		return ctrl.Result{}, err
-	}
-
-	// get the DRWatcher CR
 	err = r.Get(ctx, req.NamespacedName, &drwatcherCR)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			logger.Info("[-] watcher instance not found.")
+			logger.Error(err, "watcher instance not found.")
 			return ctrl.Result{}, nil
 		}
 		return ctrl.Result{}, err
@@ -95,23 +87,10 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	return ctrl.Result{}, nil
 }
 
-func (r *DRWatcherReconciler) preRequisites() error {
-	for _, unstructuredCrd := range veleroInstall.AllCRDs().Items {
-		crd := &apiextv1beta1.CustomResourceDefinition{}
-		err := runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredCrd.Object, crd)
-		if err != nil {
-			r.Log.Error(err, "Required velero.io group CRDs not found.")
-			return err
-		}
-	}
-	return nil
-}
-
 // SetupWithManager sets up a new DRWatcher controller managed by mgr
 func (r *DRWatcherReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&drv1.DRWatcher{}).
 		Owns(&corev1.Pod{}).
-		Owns(&velerov1.Backup{}).
 		Complete(r)
 }
