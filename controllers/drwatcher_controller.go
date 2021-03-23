@@ -40,7 +40,7 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	err = r.Get(ctx, req.NamespacedName, &drwatcherCR)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			logger.Info("[-] watcher instance not found.")
+			logger.Info("watcher instance not found.")
 			return ctrl.Result{}, nil
 		}
 		return ctrl.Result{}, err
@@ -93,6 +93,5 @@ func (r *DRWatcherReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&drv1.DRWatcher{}).
 		Owns(&corev1.Pod{}).
-		// Owns(&velerov1.Backup{}).
 		Complete(r)
 }

@@ -56,9 +56,8 @@ func checkPreRequisites(ctx context.Context, client client.Client, logger logr.L
 		err = client.Get(ctx, types.NamespacedName{Name: crd.ObjectMeta.Name}, crd)
 		if err != nil {
 			if errors.IsNotFound(err) {
-				logger.Info(fmt.Sprintf("client.Get(): Required velero.io CRD %v not found", crd.ObjectMeta.Name))
-			} else {
-				logger.Info(fmt.Sprintf("Required velero.io CRD %v found", crd.ObjectMeta.Name))
+				logger.Error(err, fmt.Sprintf("Required velero.io CRDs %v not found", crd.Name))
+				return err
 			}
 		}
 	}
