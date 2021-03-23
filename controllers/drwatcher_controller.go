@@ -36,11 +36,10 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	var err error
 	var drwatcherCR drv1.DRWatcher
 
-	// get the DRWatcher CR
 	err = r.Get(ctx, req.NamespacedName, &drwatcherCR)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			logger.Info("watcher instance not found.")
+			logger.Error(err, "watcher instance not found.")
 			return ctrl.Result{}, nil
 		}
 		return ctrl.Result{}, err
