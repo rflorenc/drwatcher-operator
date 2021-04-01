@@ -3,6 +3,6 @@ kind: DRWatcher
 metadata:
   name: drwatcher-sample
 spec:
-  readyForBackup: true
+  readyForBackup: false
   schedule: '0 1 * * *'
   command: busybox

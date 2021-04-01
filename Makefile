@@ -106,6 +106,10 @@ else
 KUSTOMIZE=$(shell which kustomize)
 endif
 
+.PHONY: envtestbin
+envtestbin:
+	hack/setup-envtest.sh
+
 # Generate bundle manifests and metadata, then validate generated files.
 .PHONY: bundle
 bundle: manifests
