@@ -8,7 +8,6 @@ metadata:
   annotations:
     meta.helm.sh/release-name: drwatcher-operator
     controller-gen.kubebuilder.io/version: v0.3.0
-  creationTimestamp: null
   name: drwatchers.dr.seven
 spec:
   group: dr.seven

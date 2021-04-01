@@ -1,18 +1,30 @@
-set -eu
+#!/bin/sh
 
 # */
-# Required binaries to use envtest
+# Required binaries to use controller-runtime envtest
 # */
+
 
 K8S_VER=v1.18.2
-ETCD_VER=v3.4.3
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-ARCH=$(uname -m | sed 's/x86_64/amd64/')
-ETCD_EXT="tar.gz"
+ETCD_VER=v3.2.32
+OS=linux
+ARCH=amd64
+EXT="tar.gz"
+OUTPUT_BINDIR=/tmp/testbin
+GITHUB_URL=https://github.com/etcd-io/etcd/releases/download
+K8S_URL=https://dl.k8s.io
 
-rm -rf ../testbin &> /dev/null
-mkdir -p ../testbin
 
-[[ -x ../testbin/etcd ]] || curl -L https://storage.googleapis.com/etcd/${ETCD_VER}/etcd-${ETCD_VER}-${OS}-${ARCH}.${ETCD_EXT} | tar zx -C ../testbin --strip-components=1 etcd-${ETCD_VER}-${OS}-${ARCH}/etcd
-[[ -x ../testbin/kube-apiserver && -x ../testbin/kubectl ]] || curl -L https://dl.k8s.io/${K8S_VER}/kubernetes-server-${OS}-${ARCH}.tar.gz | tar zx -C ../testbin --strip-components=3 kubernetes/server/bin/kube-apiserver kubernetes/server/bin/kubectl
+rm -rf ${OUTPUT_BINDIR} &> /dev/null
+mkdir -p ${OUTPUT_BINDIR}
 
+echo get etcd
+curl -s -LO ${GITHUB_URL}/${ETCD_VER}/etcd-${ETCD_VER}-${OS}-${ARCH}.${EXT}
+tar -xzf etcd-${ETCD_VER}-${OS}-${ARCH}.${EXT} -C /tmp
+cp -v /tmp/etcd-${ETCD_VER}-${OS}-${ARCH}/etcd ${OUTPUT_BINDIR}/
+
+echo get kubectl and kube-apiserver
+curl -s -LO ${K8S_URL}/${K8S_VER}/kubernetes-server-${OS}-${ARCH}.${EXT}
+tar -xzf kubernetes-server-${OS}-${ARCH}.${EXT} -C /tmp
+cp -v /tmp/kubernetes/server/bin/kube-apiserver ${OUTPUT_BINDIR}/
+cp -v /tmp/kubernetes/server/bin/kubectl ${OUTPUT_BINDIR}/

@@ -29,6 +29,10 @@ all: manager
 test: generate fmt vet manifests
 	go test ./... -coverprofile cover.out
 
+# Run integration tests
+integration-test: generate fmt vet
+	go test ./... -coverprofile cover.out
+
 # Build drwatcher-operator binary
 manager: generate fmt vet
 	go build -v -o build/bin/drwatcher-operator main.go

@@ -36,9 +36,11 @@ func TestAPIs(t *testing.T) {
 
 var _ = BeforeSuite(func(done Done) {
 	logf.SetLogger(zap.LoggerTo(GinkgoWriter, true))
-	Expect(os.Setenv("TEST_ASSET_KUBE_APISERVER", "../testbin/kube-apiserver")).To(Succeed())
-	Expect(os.Setenv("TEST_ASSET_ETCD", "../testbin/etcd")).To(Succeed())
-	Expect(os.Setenv("TEST_ASSET_KUBECTL", "../testbin/kubectl")).To(Succeed())
+	// KUBEBUILDER_ASSETS can also be used
+	// https://book.kubebuilder.io/reference/envtest.html#configuring-your-test-control-plane
+	Expect(os.Setenv("TEST_ASSET_KUBE_APISERVER", "/tmp/testbin/kube-apiserver")).To(Succeed())
+	Expect(os.Setenv("TEST_ASSET_ETCD", "/tmp/testbin/etcd")).To(Succeed())
+	Expect(os.Setenv("TEST_ASSET_KUBECTL", "/tmp/testbin/kubectl")).To(Succeed())
 
 	By("bootstrapping test environment")
 	testEnv = &envtest.Environment{

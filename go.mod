@@ -7,7 +7,6 @@ require (
 	github.com/onsi/ginkgo v1.13.0
 	github.com/onsi/gomega v1.10.1
 	github.com/vmware-tanzu/velero v1.5.2
-	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
 	k8s.io/api v0.18.8
 	k8s.io/apiextensions-apiserver v0.18.6
 	k8s.io/apimachinery v0.18.8
