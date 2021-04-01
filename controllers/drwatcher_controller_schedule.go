@@ -39,7 +39,8 @@ func (r *DRWatcherReconciler) getScheduleNames(ctx context.Context, cr *drv1.DRW
 	scheduleListOptions := []client.ListOption{
 		client.InNamespace(veleroNamespace),
 	}
-	if err := r.List(ctx, scheduleList, scheduleListOptions...); err != nil {
+	err := r.List(ctx, scheduleList, scheduleListOptions...)
+	if err != nil {
 		logger.Error(err, "Failed to list schedules", "Namespace",
 			veleroNamespace, "DRWatcher.Name", cr.Name)
 	}

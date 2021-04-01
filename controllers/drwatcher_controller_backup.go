@@ -37,7 +37,8 @@ func (r *DRWatcherReconciler) getBackupNames(ctx context.Context, cr *drv1.DRWat
 	backupListOptions := []client.ListOption{
 		client.InNamespace(veleroNamespace),
 	}
-	if err := r.List(ctx, backupList, backupListOptions...); err != nil {
+	err := r.List(ctx, backupList, backupListOptions...)
+	if err != nil {
 		logger.Error(err, "Failed to list backups", "Namespace",
 			veleroNamespace, "DRWatcher.Name", cr.Name)
 	}

@@ -64,7 +64,7 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 			err = r.Create(ctx, newSchedule)
 			if err != nil {
-				logger.Info(fmt.Sprintf("Failed to create Schedule %s with Spec.Schedule %s for project: %s", newSchedule.Name, newSchedule.Spec.Schedule, drwatcherCR.Namespace))
+				logger.Error(err, fmt.Sprintf("Failed to create Schedule %s with Spec.Schedule %s for project: %s", newSchedule.Name, newSchedule.Spec.Schedule, drwatcherCR.Namespace))
 				return ctrl.Result{}, err
 			}
 		} else {
@@ -76,12 +76,10 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 			err = r.Create(ctx, newBackup)
 			if err != nil {
-				logger.Info(fmt.Sprintf("Failed to create backup %s for project: %s", newBackup.Name, drwatcherCR.Namespace))
+				logger.Error(err, fmt.Sprintf("Failed to create backup %s for project: %s", newBackup.Name, drwatcherCR.Namespace))
 				return ctrl.Result{}, err
 			}
 		}
-	} else {
-		return ctrl.Result{}, err
 	}
 
 	return ctrl.Result{}, nil

@@ -16,7 +16,8 @@ func (r *DRWatcherReconciler) getPodInfo(ctx context.Context, cr *drv1.DRWatcher
 		client.InNamespace(cr.Namespace),
 	}
 
-	if err = r.List(ctx, podList, podListOptions...); err != nil {
+	err = r.List(ctx, podList, podListOptions...)
+	if err != nil {
 		logger.Error(err, "Failed to list pods", "DRWatcher.Namespace",
 			cr.Namespace, "DRWatcher.Name", cr.Name)
 		return nil, err
