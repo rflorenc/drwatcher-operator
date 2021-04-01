@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build master
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -46,7 +46,7 @@ jobs:
 
   deploy:
     name: Deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
