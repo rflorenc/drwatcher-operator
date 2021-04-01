@@ -18,9 +18,9 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
-    
-    - name: Run make
-      run: make all
+
+    - name: Run make envtestbin
+      run: make envtestbin
       env:
         GO111MODULE: on
         GOOS: linux
@@ -37,7 +37,7 @@ jobs:
       uses: shogo82148/actions-goveralls@v1
       with:
         path-to-profile: cover.out
-        
+
     - uses: actions/upload-artifact@v2
       with:
         name: drwatcher-operator
