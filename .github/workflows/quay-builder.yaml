@@ -18,6 +18,12 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
+    
+    - name: Run make
+      run: make
+      env:
+        GOOS: linux
+        GOARCH: amd64
 
     - name: Run make test
       run: make test
@@ -26,12 +32,6 @@ jobs:
       uses: shogo82148/actions-goveralls@v1
       with:
         path-to-profile: cover.out
-
-    - name: Run make
-      run: make
-      env:
-        GOOS: linux
-        GOARCH: amd64
 
   deploy:
     name: Deploy
