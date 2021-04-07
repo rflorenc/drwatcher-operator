@@ -82,4 +82,4 @@ jobs:
           context: .
           file: ./build/Dockerfile
           push: true
-          tags: quay.io/rflorenc/drwatcher-operator:test
+          tags: quay.io/rflorenc/drwatcher-operator:latest
