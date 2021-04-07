@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -29,6 +30,11 @@ var _ = Describe("DRWatcher controller", func() {
 		ReadyForBackup: false,
 	}
 
+	const (
+		timeout  = time.Second * 60
+		interval = time.Millisecond * 250
+	)
+
 	Context("When creating DRWatcher instance", func() {
 		It("should return an error if Name is not present", func(done Done) {
 			ctx := context.Background()
@@ -45,7 +51,7 @@ var _ = Describe("DRWatcher controller", func() {
 			Eventually(func() bool {
 				err := testClient.Get(ctx, key, obj)
 				return err == nil
-			}).Should(BeTrue())
+			}, timeout, interval).Should(BeTrue())
 			Expect(obj.ObjectMeta.Name).ShouldNot(Equal(""))
 		})
 	})
