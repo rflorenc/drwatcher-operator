@@ -82,4 +82,5 @@ jobs:
           context: .
           file: ./build/Dockerfile
           push: true
-          tags: quay.io/rflorenc/drwatcher-operator:latest
+          tags: quay.io/rflorenc/drwatcher-operator:latest,quay.io/rflorenc/drwatcher-operator:${{ github.event.release.tag_name }}
+          platforms: linux/amd64
