@@ -72,7 +72,7 @@ var _ = BeforeSuite(func(done Done) {
 
 	err = (&DRWatcherReconciler{
 		Client: testManager.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("Cronjob"),
+		Log:    ctrl.Log.WithName("controllers").WithName("drwatcher"),
 	}).SetupWithManager(testManager)
 	Expect(err).NotTo(HaveOccurred())
 
@@ -85,7 +85,7 @@ var _ = BeforeSuite(func(done Done) {
 	Expect(testClient).ToNot(BeNil())
 
 	close(done)
-}, 60)
+}, 180)
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
