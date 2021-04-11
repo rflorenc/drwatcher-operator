@@ -52,6 +52,10 @@ var _ = BeforeSuite(func(done Done) {
 	} else {
 		testEnv = &envtest.Environment{
 			CRDDirectoryPaths: []string{filepath.Join("..", "config", "crd", "bases")},
+			KubeAPIServerFlags: append(
+				envtest.DefaultKubeAPIServerFlags,
+				"--advertise-address=127.0.0.1",
+			),
 		}
 	}
 
