@@ -12,6 +12,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	drv1 "github.com/rflorenc/drwatcher-operator/api/v1"
+	corev1 "k8s.io/api/core/v1"
 )
 
 var (
@@ -29,8 +30,8 @@ type DRWatcherReconciler struct {
 // Reconcile tracks changes to DRWatcher CRs and enables self service creation of Backups and Schedules.
 // +kubebuilder:rbac:groups=dr.seven,resources=drwatchers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=dr.seven,resources=drwatchers/status,verbs=get;update;patch
-func (r *DRWatcherReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	ctx = context.Background()
+func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
+	ctx := context.Background()
 	logger := r.Log.WithValues("DRWatcher", req.NamespacedName)
 	var err error
 	var drwatcherCR drv1.DRWatcher
@@ -88,5 +89,6 @@ func (r *DRWatcherReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 func (r *DRWatcherReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&drv1.DRWatcher{}).
+		Owns(&corev1.Pod{}).
 		Complete(r)
 }

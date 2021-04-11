@@ -13,7 +13,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	drv1 "github.com/rflorenc/drwatcher-operator/api/v1"
@@ -36,8 +36,7 @@ func TestAPIs(t *testing.T) {
 }
 
 var _ = BeforeSuite(func(done Done) {
-	log.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
-
+	logf.SetLogger(zap.LoggerTo(GinkgoWriter, true))
 	// KUBEBUILDER_ASSETS can also be used
 	// https://book.kubebuilder.io/reference/envtest.html#configuring-your-test-control-plane
 	Expect(os.Setenv("TEST_ASSET_KUBE_APISERVER", "/tmp/testbin/kube-apiserver")).To(Succeed())
