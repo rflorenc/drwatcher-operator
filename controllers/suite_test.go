@@ -4,9 +4,11 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -23,9 +25,12 @@ import (
 // These tests use Ginkgo (BDD-style Go testing framework). Refer to
 // http://onsi.github.io/ginkgo/ to learn more about Ginkgo.
 
-var cfg *rest.Config
-var testClient client.Client
-var testEnv *envtest.Environment
+var (
+	cfg        *rest.Config
+	testClient client.Client
+	testEnv    *envtest.Environment
+	finished   = make(chan struct{})
+)
 
 func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -82,8 +87,17 @@ var _ = BeforeSuite(func(done Done) {
 	Expect(err).NotTo(HaveOccurred())
 
 	go func() {
-		err = testManager.Start(ctrl.SetupSignalHandler())
-		Expect(err).NotTo(HaveOccurred())
+		<-ctrl.SetupSignalHandler()
+		close(finished)
+	}()
+
+	go func() {
+		defer GinkgoRecover()
+		err = testManager.Start(finished)
+		Expect(err).NotTo(HaveOccurred(), "failed to run manager")
+		gexec.KillAndWait(5 * time.Second)
+		err := testEnv.Stop()
+		Expect(err).ToNot(HaveOccurred())
 	}()
 
 	testClient = testManager.GetClient()
@@ -93,10 +107,5 @@ var _ = BeforeSuite(func(done Done) {
 }, 180)
 
 var _ = AfterSuite(func() {
-	By("tearing down the test environment")
-	Expect(os.Unsetenv("TEST_ASSET_KUBE_APISERVER")).To(Succeed())
-	Expect(os.Unsetenv("TEST_ASSET_ETCD")).To(Succeed())
-	Expect(os.Unsetenv("TEST_ASSET_KUBECTL")).To(Succeed())
-	err := testEnv.Stop()
-	Expect(err).ToNot(HaveOccurred())
+	close(finished)
 })

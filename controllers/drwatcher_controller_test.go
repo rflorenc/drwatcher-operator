@@ -31,7 +31,7 @@ var _ = Describe("DRWatcher controller", func() {
 	}
 
 	const (
-		timeout  = time.Second * 60
+		timeout  = time.Minute
 		interval = time.Millisecond * 250
 	)
 
