@@ -1,11 +1,11 @@
 package version
 
 var (
-	// operator version
+	// Version manually tracks the operator version.
 	Version = "0.1.1"
 )
 
 const (
-	// operator name
+	// OperatorName registers the operator name.
 	OperatorName = "DRWatcher-operator"
 )
