@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/rflorenc/drwatcher-operator)](https://goreportcard.com/report/github.com/rflorenc/drwatcher-operator)
+
 # DRWatcher Self Service Operator
 
 ## Summary
