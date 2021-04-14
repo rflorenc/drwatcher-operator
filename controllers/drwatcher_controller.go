@@ -50,9 +50,8 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		logger.Error(err, "Failed to get restic pod annotations", "Namespace",
 			veleroNamespace, "DRWatcher.Name", drwatcherCR.Name)
 		return ctrl.Result{}, err
-	} else {
-		logger.Info(fmt.Sprintf("resticAnnotations: %s", resticAnnotations))
 	}
+	logger.Info(fmt.Sprintf("resticAnnotations: %s", resticAnnotations))
 
 	if drwatcherCR.Spec.ReadyForBackup {
 		if drwatcherCR.Spec.Schedule != "" {
