@@ -50,7 +50,7 @@ jobs:
         GOARCH: amd64
 
     - name: Send result to coveralls
-      uses: shogo82148/actions-goveralls@v1
+      uses: shogo82148/actions-goveralls@v1.4.4
       with:
         path-to-profile: cover.out
 
