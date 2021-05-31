@@ -10,45 +10,41 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (r *DRWatcherReconciler) newBackupForCR(cr *drv1.DRWatcher) *velerov1.Backup {
+func (r *DRWatcherReconciler) newRestoreForCR(cr *drv1.DRWatcher) *velerov1.Restore {
 	var includedNamespaces []string
 	includedNamespaces = append(includedNamespaces, cr.Namespace)
-
-	if cr.Spec.BackupName == "" {
-		cr.Spec.BackupName = cr.Namespace + "-drwatcher-backup"
-	}
 
 	labels := map[string]string{
 		"created-by":                 "drwatcher",
 		"velero.io/storage-location": "default",
 	}
 
-	return &velerov1.Backup{
+	return &velerov1.Restore{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      cr.Spec.BackupName,
 			Namespace: veleroNamespace,
 			Labels:    labels,
 		},
-		Spec: velerov1.BackupSpec{
-			StorageLocation:    "default",
+		Spec: velerov1.RestoreSpec{
+			BackupName:         cr.Spec.BackupName,
 			IncludedNamespaces: includedNamespaces,
 		},
 	}
 }
 
-func (r *DRWatcherReconciler) getBackupNames(ctx context.Context, cr *drv1.DRWatcher, logger logr.Logger) []string {
-	backupList := &velerov1.BackupList{}
-	backupListOptions := []client.ListOption{
+func (r *DRWatcherReconciler) getRestoreNames(ctx context.Context, cr *drv1.DRWatcher, logger logr.Logger) []string {
+	restoreList := &velerov1.RestoreList{}
+	restoreListOptions := []client.ListOption{
 		client.InNamespace(veleroNamespace),
 	}
-	err := r.List(ctx, backupList, backupListOptions...)
+	err := r.List(ctx, restoreList, restoreListOptions...)
 	if err != nil {
-		logger.Error(err, "Failed to list backups", "Namespace",
+		logger.Error(err, "Failed to list restores", "Namespace",
 			veleroNamespace, "DRWatcher.Name", cr.Name)
 	}
-	var backupInfo []string
-	for _, backup := range backupList.Items {
-		backupInfo = append(backupInfo, backup.Name)
+	var restoreInfo []string
+	for _, backup := range restoreList.Items {
+		restoreInfo = append(restoreInfo, backup.Name)
 	}
-	return backupInfo
+	return restoreInfo
 }

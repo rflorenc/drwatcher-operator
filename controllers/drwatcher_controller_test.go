@@ -26,7 +26,7 @@ var _ = Describe("DRWatcher controller", func() {
 
 	spec := drv1.DRWatcherSpec{
 		Schedule:       "",
-		Command:        "test",
+		BackupName:     "test",
 		ReadyForBackup: false,
 	}
 

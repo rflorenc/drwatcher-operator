@@ -53,10 +53,14 @@ var _ = BeforeSuite(func(done Done) {
 		testEnv = &envtest.Environment{
 			CRDDirectoryPaths:        []string{filepath.Join("..", "config", "crd", "bases")},
 			AttachControlPlaneOutput: true,
-			KubeAPIServerFlags: append(
-				envtest.DefaultKubeAPIServerFlags,
-				"--advertise-address=127.0.0.1",
-			),
+			ControlPlane:             testEnv.ControlPlane,
+			ControlPlaneStartTimeout: 360,
+			ControlPlaneStopTimeout:  360,
+			UseExistingCluster:       &t,
+			// KubeAPIServerFlags: append(
+			// 	envtest.DefaultKubeAPIServerFlags,
+			// 	"--advertise-address=127.0.0.1",
+			// ),
 		}
 	}
 
@@ -90,7 +94,7 @@ var _ = BeforeSuite(func(done Done) {
 	Expect(testClient).ToNot(BeNil())
 
 	close(done)
-}, 180)
+}, 10000)
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")

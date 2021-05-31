@@ -4,5 +4,6 @@ metadata:
   name: drwatcher-sample
 spec:
   readyForBackup: false
+  backupName: backup-Test
   schedule: '0 1 * * *'
-  command: busybox
+  readyForRestore: false

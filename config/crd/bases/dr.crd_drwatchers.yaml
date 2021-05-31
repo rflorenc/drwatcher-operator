@@ -38,9 +38,11 @@ spec:
         spec:
           description: DRWatcherSpec defines the desired state of DRWatcher
           properties:
-            command:
+            backupName:
               type: string
             readyForBackup:
+              type: boolean
+            readyForRestore:
               type: boolean
             schedule:
               description: Foo is an example field of DRWatcher. Edit DRWatcher_types.go

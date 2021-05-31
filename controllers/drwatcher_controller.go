@@ -27,7 +27,7 @@ type DRWatcherReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// Reconcile tracks changes to DRWatcher CRs and enables self service creation of Backups and Schedules.
+// Reconcile tracks changes to DRWatcher CRs and enables self service creation of Backups, Restores and Schedules.
 // +kubebuilder:rbac:groups=dr.seven,resources=drwatchers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=dr.seven,resources=drwatchers/status,verbs=get;update;patch
 func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
@@ -35,6 +35,10 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	logger := r.Log.WithValues("DRWatcher", req.NamespacedName)
 	var err error
 	var drwatcherCR drv1.DRWatcher
+
+	if drwatcherCR.Spec.ReadyForRestore && drwatcherCR.Spec.ReadyForBackup {
+		return ctrl.Result{}, err
+	}
 
 	err = r.Get(ctx, req.NamespacedName, &drwatcherCR)
 	if err != nil {
@@ -78,6 +82,22 @@ func (r *DRWatcherReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 				logger.Error(err, fmt.Sprintf("Failed to create backup %s for project: %s", newBackup.Name, drwatcherCR.Namespace))
 				return ctrl.Result{}, err
 			}
+		}
+	}
+
+	if drwatcherCR.Spec.ReadyForRestore {
+		drwatcherCR.Spec.ReadyForBackup = false
+
+		existingRestores := r.getRestoreNames(ctx, &drwatcherCR, logger)
+		logger.Info(fmt.Sprintf("Current restores: %s", existingRestores))
+
+		newRestore := r.newRestoreForCR(&drwatcherCR)
+		logger.Info(fmt.Sprintf("Creating restore %s for project: %s", newRestore.Name, drwatcherCR.Namespace))
+
+		err = r.Create(ctx, newRestore)
+		if err != nil {
+			logger.Error(err, fmt.Sprintf("Failed to create restore %s for project: %s", newRestore.Name, drwatcherCR.Namespace))
+			return ctrl.Result{}, err
 		}
 	}
 

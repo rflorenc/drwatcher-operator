@@ -1,86 +1,86 @@
-name: quay
+# name: quay
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+# on:
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
 
-jobs:
-  build:
-    name: Build master
-    runs-on: ubuntu-latest
-    steps:
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: ^1.15
+# jobs:
+#   build:
+#     name: Build master
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Set up Go
+#       uses: actions/setup-go@v2
+#       with:
+#         go-version: ^1.15
 
-    - name: Checkout
-      uses: actions/checkout@v2.3.4
+#     - name: Checkout
+#       uses: actions/checkout@v2
 
-    - name: chmod script
-      run: chmod +x ./hack/setup-envtest.sh
+#     - name: chmod script
+#       run: chmod +x ./hack/setup-envtest.sh
 
-    - name: Run make envtestbin
-      run: make envtestbin
-      env:
-        GO111MODULE: on
-        GOOS: linux
-        GOARCH: amd64
+#     - name: Run make envtestbin
+#       run: make envtestbin
+#       env:
+#         GO111MODULE: on
+#         GOOS: linux
+#         GOARCH: amd64
 
-    - name: Run make manager
-      run: make manager
-      env:
-        GO111MODULE: on
-        GOOS: linux
-        GOARCH: amd64
+#     - name: Run make manager
+#       run: make manager
+#       env:
+#         GO111MODULE: on
+#         GOOS: linux
+#         GOARCH: amd64
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: drwatcher-operator
-        path: build/bin/drwatcher-operator
-        if-no-files-found: error
+#     - uses: actions/upload-artifact@v2
+#       with:
+#         name: drwatcher-operator
+#         path: build/bin/drwatcher-operator
+#         if-no-files-found: error
 
-    - name: Run make integration-test
-      run: make integration-test
-      env:
-        GO111MODULE: on
-        GOOS: linux
-        GOARCH: amd64
+#     - name: Run make integration-test
+#       run: make integration-test
+#       env:
+#         GO111MODULE: on
+#         GOOS: linux
+#         GOARCH: amd64
 
-    - name: Send result to coveralls
-      uses: shogo82148/actions-goveralls@v1.4.4
-      with:
-        path-to-profile: cover.out
+#     - name: Send result to coveralls
+#       uses: shogo82148/actions-goveralls@v1
+#       with:
+#         path-to-profile: cover.out
 
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@v2.3.4
+#   deploy:
+#     name: Deploy
+#     runs-on: ubuntu-latest
+#     needs: [build]
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - uses: docker/setup-buildx-action@v1.3.0
+#       - uses: docker/setup-buildx-action@v1
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: drwatcher-operator
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: drwatcher-operator
 
-      - run: chmod -v +x drwatcher-operator
+#       - run: chmod -v +x drwatcher-operator
 
-      - name: Login to quay.io
-        uses: docker/login-action@v1.9.0
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAYIO_USERNAME }}
-          password: ${{ secrets.QUAYIO_ROBOT_TOKEN }}
+#       - name: Login to quay.io
+#         uses: docker/login-action@v1
+#         with:
+#           registry: quay.io
+#           username: ${{ secrets.QUAYIO_USERNAME }}
+#           password: ${{ secrets.QUAYIO_ROBOT_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v2.4.0
-        with:
-          context: .
-          file: ./build/Dockerfile
-          push: true
-          tags: quay.io/rflorenc/drwatcher-operator:latest,quay.io/rflorenc/drwatcher-operator:v0.1.1
-          platforms: linux/amd64
+#       - name: Build and push
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: .
+#           file: ./build/Dockerfile
+#           push: true
+#           tags: quay.io/rflorenc/drwatcher-operator:latest,quay.io/rflorenc/drwatcher-operator:v0.1.1
+#           platforms: linux/amd64

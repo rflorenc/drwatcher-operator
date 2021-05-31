@@ -8,9 +8,12 @@ import (
 type DRWatcherSpec struct {
 	// Important: Run "make manifests" to regenerate code after modifying this file
 
-	Schedule       string `json:"schedule,omitempty"`
-	Command        string `json:"command,omitempty"`
+	Schedule string `json:"schedule,omitempty"`
+
+	BackupName     string `json:"backupName,omitempty"`
 	ReadyForBackup bool   `json:"readyForBackup,omitempty"`
+
+	ReadyForRestore bool `json:"readyForRestore,omitempty"`
 }
 
 // DRWatcherStatus defines the observed state of DRWatcher
