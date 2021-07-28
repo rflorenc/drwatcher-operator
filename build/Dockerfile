@@ -1,11 +1,11 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
-ENV OPERATOR_DEST_DIR=/usr/local/bin/drwatcher-operator \
-    USER_UID=1337
+ENV OPERATOR_BIN=/usr/local/bin/drwatcher-operator \
+    USER=1337:1337
 
 # Assumes `make` previously ran sucessfully from the root dir
-COPY drwatcher-operator ${OPERATOR_DEST_DIR}
+COPY drwatcher-operator ${OPERATOR_BIN}
 
-USER ${USER_UID}
+USER ${USER}
 
-CMD ["/usr/local/bin/drwatcher-operator"]
+CMD ["${OPERATOR_BIN}"]
