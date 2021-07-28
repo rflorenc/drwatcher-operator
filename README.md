@@ -5,7 +5,6 @@
 ## Summary
 
 The DR (Disaster Restic|Recovery) Watcher is used for enabling [Noobaa](https://www.noobaa.io/) and [Velero](https://velero.io/) based Self Service backups and schedules in OpenShift v4.x, Kubernetes v1.13 or later.
-An example backup infra can be setup by following the instructions here: [https://github.com/rflorenc/openshift-backup-infra](https://github.com/rflorenc/openshift-backup-infra)
 
 ## DR Watcher Operator Functionality
 
